@@ -181,12 +181,13 @@ function createCollectable(x, y) {
 // removed from the game.
 function applyGravity() {
     player.velocity.y += GRAVITY;
-    if(player.previousPosition.y !== player.position.y){
+    if(player.previousPosition.y !== player.position.y) {
       playerGrounded = false;
-    }
-    for(var i = 0; i < monsters.lenght; i++){
+  }
+
+    for(var i = 0; i < monsters.length; i++) {
       monsters[i].velocity.y += GRAVITY;
-      if(monsters[i].position.y >= height){
+      if(monsters[i].position.y >= height) {
         monsters[i].remove();
       }
     }
@@ -197,7 +198,8 @@ function applyGravity() {
 // occurs, a specific callback function is run.
 function checkCollisions() {
     player.collide(platforms, platformCollision);
-    monsters.collide(platforms,platformCollision);
+    monsters.collide(platforms, platformCollision);
+    player.collide(monsters, playerMonsterCollision);
 }
 
 // Callback function that runs when the player or a monster collides with a
@@ -209,15 +211,26 @@ function platformCollision(sprite, platform) {
         currentJumpTime = MAX_JUMP_TIME;
         currentJumpForce = DEFAULT_JUMP_FORCE;
     }
-    for(var i = 0; i <monsters.length; i++){
-if(sprite === monsters[i] && sprite.touching.bottom){
-  sprite.velocity.y = 0;
+    for(var i = 0; i < monsters.length; i++) {
+      if(sprite === monsters[i] && sprite.touching.bottom) {
+        sprite.velocity.y = 0;
       }
     }
 }
 
 // Callback function that runs when the player collides with a monster.
 function playerMonsterCollision(player, monster) {
+    if(player.touching.bottom) {
+ monster.remove();
+ var defeatedMonster = createSprite(monster.position.x, monster.position.y,0,0);
+ defeatedMonster.addImage(monsterDefeatImage);
+ defeatedMonster.mirrorX(monster.mirrorX());
+ defeatedMonster.scale = 0.25;
+ defeatedMonster.life = 40;
+    }
+    else {
+      executeLoss();
+    }
 
 }
 
@@ -259,10 +272,11 @@ function checkFalling() {
 // key, which should allow her to jump higher so long as currentJumpTime is greater
 // than 0.
 function checkJumping() {
-  if(player.velocity.y < 0){
+  if(player.velocity.y < 0) {
     player.changeAnimation("jump");
-    if(keyIsDown(UP_ARROW)&& currentJumpTime >0){
+    if(keyIsDown(UP_ARROW) && currentJumpTime > 0) {
       player.velocity.y = currentJumpForce;
+      deltaMillis = new Date();
       currentJumpTime -= deltaMillis - millis;
     }
   }
@@ -292,18 +306,19 @@ function checkMovingLeftRight() {
 // this should initiate the jump sequence, which can be extended by holding down
 // the up arrow key (see checkJumping() above).
 function keyPressed() {
-  if(keyCode === UP_ARROW && playerGrounded){
+  if(keyCode === UP_ARROW && playerGrounded) {
     playerGrounded = false;
     player.velocity.y = currentJumpForce;
     millis = new Date();
   }
 }
+
 // Check if the player has released the up arrow key. If the player's y velocity
 // is < 0 (that is, she is currently moving "up" on the canvas), then this will
 // immediately set currentJumpTime to 0, causing her to begin falling.
 function keyReleased() {
-if(keyCode === UP_ARROW && player.velocity.y < 0){
-  currentJumpTime = 0;
+  if(keyCode === UP_ARROW && player.velocity.y < 0) {
+    currentJumpTime = 0;
   }
 }
 
