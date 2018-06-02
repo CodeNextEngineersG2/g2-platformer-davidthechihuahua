@@ -227,6 +227,11 @@ function playerMonsterCollision(player, monster) {
  defeatedMonster.mirrorX(monster.mirrorX());
  defeatedMonster.scale = 0.25;
  defeatedMonster.life = 40;
+ currentJumpTime = MAX_JUMP_TIME;
+currentJumpForce = DEFAULT_JUMP_FORCE;
+player.velocity.y = currentJumpForce;
+millis = new Date();
+score++;
     }
     else {
       executeLoss();
@@ -236,6 +241,7 @@ function playerMonsterCollision(player, monster) {
 
 // Callback function that runs when the player overlaps with a collectable.
 function getCollectable(player, collectable) {
+  player.overlap(collectables, getCollectable);
 
 }
 
@@ -247,6 +253,7 @@ function updatePlayer() {
   checkFalling();
   checkJumping();
   checkMovingLeftRight();
+
 }
 
 // Check if the player is idle. If neither left nor right are being pressed and the
@@ -352,6 +359,7 @@ function updateDisplay() {
 
   // turn camera back on
   camera.on();
+  camera.position.y = player.position.y;
 
 }
 
@@ -366,5 +374,6 @@ function executeWin() {
 // a monster). Anything can happen here, but the most important thing is that we
 // call resetGame() after a short delay.
 function executeLoss() {
-
+noLoop();
+setTimeout(resetGame, 1000);
 }
