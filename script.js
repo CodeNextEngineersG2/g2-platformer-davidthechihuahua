@@ -8,7 +8,7 @@ var platformImageFirst, platformImageMiddle, platformImageLast;
 
 // Player Variables
 var player; //p5.play sprite
-var playerIdleAnimation, playerRunAnimation, playerJumpAnimation, playerFallAnimation;
+var playerIdleAnimation, playerRunAnimation, playerJumpAnimation, playerFallAnimation, PlayerDeathAnimation;
 var playerGrounded; // boolean
 var playerStartX, playerStartY;
 
@@ -56,17 +56,17 @@ function preload() {
   platformImageLast = loadImage("assets/img/tiles/Tile (16).png");
 
   // load player animations
-  playerIdleAnimation = loadAnimation("assets/img/kunoichi/Idle__000.png", "assets/img/kunoichi/Idle__009.png");
-  playerRunAnimation = loadAnimation("assets/img/kunoichi/Run__000.png", "assets/img/kunoichi/Run__009.png");
-  playerJumpAnimation = loadAnimation("assets/img/kunoichi/Jump__004.png");
-  playerFallAnimation = loadAnimation("assets/img/kunoichi/Jump__009.png");
+  playerIdleAnimation = loadAnimation("assets/img/shinobi/Idle__000.png", "assets/img/shinobi/Idle__009.png");
+  playerRunAnimation = loadAnimation("assets/img/shinobi/Run__000.png", "assets/img/shinobi/Run__009.png");
+  playerJumpAnimation = loadAnimation("assets/img/shinobi/Jump__004.png");
+  playerFallAnimation = loadAnimation("assets/img/shinobi/Jump__009.png");
 
   // load monster animations
   monsterWalkAnimation = loadAnimation("assets/img/monster/frame-1.png", "assets/img/monster/frame-10.png");
   monsterDefeatImage = loadImage("assets/img/monster/defeat-frame-3.png");
 
   // load other game object images
-  collectableImage = loadImage("assets/img/kunoichi/Kunai.png");
+  collectableImage = loadImage("assets/img/shinobi/Kunai.png");
   goalImage = loadImage("assets/img/objects/Goal.png");
 }
 
@@ -85,6 +85,7 @@ function draw() {
   updatePlayer();
   updateDisplay();
   drawSprites();
+
 }
 
 // Called when player wins or loses
@@ -166,6 +167,7 @@ function createMonster(x, y, velocity) {
   //monster.debug = true;
 }
 
+
 // Creates a collectable sprite and adds an image to it.
 function createCollectable(x, y) {
   var collectable = createSprite(x, y, 0, 0);
@@ -234,7 +236,8 @@ millis = new Date();
 score++;
     }
     else {
-      executeLoss();
+    executeLoss();
+
     }
 
 }
